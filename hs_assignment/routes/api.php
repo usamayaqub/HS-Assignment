@@ -1,9 +1,12 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\userctrl;
-use App\Http\Controllers\productctrl;
+use App\Http\Controllers\filectrl;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\CodeCheckController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,17 +18,32 @@ use App\Http\Controllers\productctrl;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/product', [productctrl::class, 'index']);
-Route::post('/register', [userctrl::class, 'register']);
-Route::post('/login', [userctrl::class, 'login']);
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-Route::group(['middleware' => ['auth:sanctum']], function(){
 
+// %%%%%%%%%%%%%%%%%%%% Public API's %%%%%%%%%%%%%%%%%%
+
+    Route::post('/register', [userctrl::class, 'register']);
+    Route::post('/login', [userctrl::class, 'login']);
+    Route::post('password/email',  [ForgotPasswordController::class, 'forgot']);
+    Route::post('password/code/check', [CodeCheckController::class, 'codecheck']);
+    Route::post('password/reset', [ResetPasswordController::class, 'reset']);
+
+    Route::get('/test',[userctrl::class, 'test']);
+
+// %%%%%%%%%%%%%%%%%%%% Public API's %%%%%%%%%%%%%%%%%%%%%
+      
+// %%%%%%%%%%%%%%%%%%%% Privatye/Sanctum Secured API's %%%%%%%%%%%%%%%%%%%%
+
+    Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/logout', [userctrl::class, 'logout']);
-    Route::post('/product', [productctrl::class,'store']);
-    Route::delete('/product/{id}', [productctrl::class,'destroy']);
-    Route::post('/product/{id}', [productctrl::class,'update']);
-   
+    Route::post('/update/{id}', [userctrl::class, 'update']); 
+    
+    Route::get('/show', [userctrl::class, 'showusers']);
+    Route::post('/addfile', [filectrl::class, 'store']);
+    Route::post('/updatefile/{id}', [filectrl::class, 'update']);
+    Route::post('/deletefile/{id}', [filectrl::class, 'destroy']);
+    Route::post('/placeorder', [orderController::class, 'addorder']);
+    Route::post('/updateorder/{id}', [orderController::class, 'updateorder']);
+
 });
+
+// %%%%%%%%%%%%%%% Privatye/Sanctum Secured API's %%%%%%%%%%%%%%%%
