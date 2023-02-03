@@ -43,6 +43,8 @@ use App\Http\Controllers\OrderController;
     Route::post('/deletefile/{id}', [filectrl::class, 'destroy']);
     Route::post('/placeorder', [orderController::class, 'addorder']);
     Route::post('/updateorder/{id}', [orderController::class, 'updateorder']);
+    Route::post('/deleteorder/{id}', [orderController::class, 'deleteorder']);
+    Route::get('/showorders', [orderController::class, 'showorders']);
 
 });
 
